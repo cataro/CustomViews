@@ -17,7 +17,7 @@ import android.view.View;
  * A simple view to capture a path traced onto the screen. Initially intended to be used to captures signatures.
  * 
  * @author Andrew Crichton
- * @version 0.2
+ * @version 0.3
  */
 public class SignatureView extends View {
 
@@ -33,6 +33,7 @@ public class SignatureView extends View {
     private float curX, curY;
     private boolean isDragged = false;
     private boolean signed = false;
+    private boolean blocked = false;
 
     public SignatureView(final Context context) {
         super(context);
@@ -151,22 +152,26 @@ public class SignatureView extends View {
 
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
-        float x = event.getX();
-        float y = event.getY();
 
-        switch (event.getAction()) {
-        case MotionEvent.ACTION_DOWN:
-            touchDown(x, y);
-            signed = true;
-            break;
-        case MotionEvent.ACTION_MOVE:
-            touchMove(x, y);
-            break;
-        case MotionEvent.ACTION_UP:
-            touchUp();
-            break;
+        if (!isBlocked()) {
+            float x = event.getX();
+            float y = event.getY();
+
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    touchDown(x, y);
+                    signed = true;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    touchMove(x, y);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    touchUp();
+                    break;
+            }
+            invalidate();
         }
-        invalidate();
+
         return true;
     }
 
@@ -205,5 +210,13 @@ public class SignatureView extends View {
 
     public boolean isSigned() {
         return signed;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
+    }
+
+    public boolean isBlocked() {
+        return blocked;
     }
 }
