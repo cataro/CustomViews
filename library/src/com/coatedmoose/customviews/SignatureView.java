@@ -33,9 +33,10 @@ public class SignatureView extends View {
     private float curX, curY;
     private boolean isDragged = false;
     private boolean signed = false;
-    private boolean blocked = false;
+    private boolean disabled = false;
 
-    public SignatureView(final Context context) {
+
+	public SignatureView(final Context context) {
         super(context);
         init();
     }
@@ -153,7 +154,7 @@ public class SignatureView extends View {
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
 
-        if (!isBlocked()) {
+        if (disabled) {
             float x = event.getX();
             float y = event.getY();
 
@@ -212,11 +213,12 @@ public class SignatureView extends View {
         return signed;
     }
 
-    public void setBlocked(boolean blocked) {
-        this.blocked = blocked;
-    }
+    public boolean isDisabled() {
+		return disabled;
+	}
 
-    public boolean isBlocked() {
-        return blocked;
-    }
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+
 }
